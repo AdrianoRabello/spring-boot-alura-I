@@ -1,7 +1,9 @@
 package br.com.alura.forum.Controllers;
 
 import br.com.alura.forum.dtos.TopicoDto;
+import br.com.alura.forum.dtos.TopicoDtoDetail;
 import br.com.alura.forum.dtos.form.TopicoForm;
+import br.com.alura.forum.dtos.form.TopicoFormUpdate;
 import br.com.alura.forum.models.Curso;
 import br.com.alura.forum.models.Topico;
 import br.com.alura.forum.repository.CursoRepository;
@@ -13,8 +15,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @autor Adriano Rabello 13/01/2021  9:27 PM
@@ -52,5 +56,39 @@ public class TopicoController {
         URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 
         return ResponseEntity.created(uri).body( new TopicoDto(topico));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoDto> findById(@PathVariable Long id){
+        Optional<Topico> topico = topicoRepository.findById(id);
+
+        if(topico.isPresent()){
+            return ResponseEntity.ok(new TopicoDto(topico.get()));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/detail")
+    public TopicoDtoDetail findTopicoDtoDetail(@PathVariable Long id){
+        Optional<Topico> topico = topicoRepository.findById(id);
+
+       return new TopicoDtoDetail(topico.orElse(null));
+    }
+
+    @PutMapping("{id}")
+    @Transactional
+    public TopicoDto update(@PathVariable Long id, @RequestBody TopicoFormUpdate topicoUpdate){
+
+       return topicoUpdate.update(id, topicoRepository);
+
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+
+        topicoRepository.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 }
