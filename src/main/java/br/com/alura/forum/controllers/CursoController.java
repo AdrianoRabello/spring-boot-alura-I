@@ -1,4 +1,4 @@
-package br.com.alura.forum.Controllers;
+package br.com.alura.forum.controllers;
 
 import br.com.alura.forum.repository.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,9 @@
-package br.com.alura.forum.Controllers;
+package br.com.alura.forum.controllers;
 
 import br.com.alura.forum.dtos.TopicoDto;
 import br.com.alura.forum.dtos.TopicoDtoDetail;
 import br.com.alura.forum.dtos.form.TopicoForm;
 import br.com.alura.forum.dtos.form.TopicoFormUpdate;
-import br.com.alura.forum.models.Curso;
 import br.com.alura.forum.models.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -53,12 +50,8 @@ public class TopicoController {
      * cache  */
     @Cacheable(value = "topicoList")
     public ResponseEntity<Page<TopicoDto>> findAll(@RequestParam(required = false) String nome,
-                                                   @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-
-
-
-
-
+                                                   @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
+                                                           Pageable pageable) {
 
         if (nome == null) {
             Page<Topico> pages = topicoRepository.findAll(pageable);

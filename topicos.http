@@ -1,0 +1,13 @@
+GET http://localhost:8080/topicos
+
+####
+
+POST http://localhost:8080/topicos
+Content-Type: application/json
+
+{
+"titulo": "teste http",
+"mensagem": "teste http mensagem",
+"nomeCurso": "Spring Boot"
+}
+
