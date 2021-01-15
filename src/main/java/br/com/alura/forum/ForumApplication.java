@@ -7,11 +7,15 @@ import br.com.alura.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
+
+/** enble request params and pass to SpringData. Is not enabled for default */
+@EnableSpringDataWebSupport
 public class ForumApplication implements Runnable {
 
     @Autowired

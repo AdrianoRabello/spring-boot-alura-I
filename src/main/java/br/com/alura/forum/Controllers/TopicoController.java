@@ -9,6 +9,11 @@ import br.com.alura.forum.models.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,16 +41,36 @@ public class TopicoController {
 
 
     @GetMapping
-    public ResponseEntity<List<TopicoDto>> findAll(){
+    /** @Requestparam define param required or not */
+//    public ResponseEntity<Page<TopicoDto>> findAll(@RequestParam(required = false) String nome,
+//                                                   @RequestParam int page,
+//                                                   @RequestParam int quantity,
+//                                                   @RequestParam(required = false) String ordenacao) {
 
-        List<Topico> topicos = topicoRepository.findAll();
+    /** to use this wee nedd to enable @EnableSpringDataWebSupport in Application main */
+    public ResponseEntity<Page<TopicoDto>> findAll(@RequestParam(required = false) String nome,
+                                                   @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
 
-        return  new ResponseEntity<>(TopicoDto.convert(topicos), HttpStatus.OK);
+
+
+
+
+        if (nome == null) {
+            Page<Topico> pages = topicoRepository.findAll(pageable);
+
+            return new ResponseEntity<>(TopicoDto.convert(pages), HttpStatus.OK);
+
+        }
+
+
+        Page<Topico> topicos = topicoRepository.findByCursoNome(nome, pageable);
+
+        return new ResponseEntity<>(TopicoDto.convert(topicos), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<TopicoDto> save(@RequestBody @Validated TopicoForm topicoForm, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<TopicoDto> save(@RequestBody @Validated TopicoForm topicoForm, UriComponentsBuilder uriComponentsBuilder) {
 
         /** thves to convert are insidde TopicoForm Object. I passad cursoRepository for TopicoForm to find Curso by name */
         Topico topico = topicoForm.convert(cursoRepository);
@@ -55,14 +80,14 @@ public class TopicoController {
         /** generationg  URI for new resource generated */
         URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 
-        return ResponseEntity.created(uri).body( new TopicoDto(topico));
+        return ResponseEntity.created(uri).body(new TopicoDto(topico));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TopicoDto> findById(@PathVariable Long id){
+    public ResponseEntity<TopicoDto> findById(@PathVariable Long id) {
         Optional<Topico> topico = topicoRepository.findById(id);
 
-        if(topico.isPresent()){
+        if (topico.isPresent()) {
             return ResponseEntity.ok(new TopicoDto(topico.get()));
         }
 
@@ -70,22 +95,22 @@ public class TopicoController {
     }
 
     @GetMapping("/{id}/detail")
-    public TopicoDtoDetail findTopicoDtoDetail(@PathVariable Long id){
+    public TopicoDtoDetail findTopicoDtoDetail(@PathVariable Long id) {
         Optional<Topico> topico = topicoRepository.findById(id);
 
-       return new TopicoDtoDetail(topico.orElse(null));
+        return new TopicoDtoDetail(topico.orElse(null));
     }
 
     @PutMapping("{id}")
     @Transactional
-    public TopicoDto update(@PathVariable Long id, @RequestBody TopicoFormUpdate topicoUpdate){
+    public TopicoDto update(@PathVariable Long id, @RequestBody TopicoFormUpdate topicoUpdate) {
 
-       return topicoUpdate.update(id, topicoRepository);
+        return topicoUpdate.update(id, topicoRepository);
 
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@PathVariable Long id){
+    public ResponseEntity delete(@PathVariable Long id) {
 
         topicoRepository.deleteById(id);
 
