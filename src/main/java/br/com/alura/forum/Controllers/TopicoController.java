@@ -9,6 +9,8 @@ import br.com.alura.forum.models.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +49,9 @@ public class TopicoController {
 //                                                   @RequestParam int quantity,
 //                                                   @RequestParam(required = false) String ordenacao) {
 
-    /** to use this wee nedd to enable @EnableSpringDataWebSupport in Application main */
+    /** to use this wee nedd to enable @EnableSpringDataWebSupport in Application main. Value is the id name for atribute
+     * cache  */
+    @Cacheable(value = "topicoList")
     public ResponseEntity<Page<TopicoDto>> findAll(@RequestParam(required = false) String nome,
                                                    @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
@@ -70,6 +74,8 @@ public class TopicoController {
     }
 
     @PostMapping
+    /** to clear all cache. */
+    @CacheEvict(value = "topicoList", allEntries = true)
     public ResponseEntity<TopicoDto> save(@RequestBody @Validated TopicoForm topicoForm, UriComponentsBuilder uriComponentsBuilder) {
 
         /** thves to convert are insidde TopicoForm Object. I passad cursoRepository for TopicoForm to find Curso by name */
@@ -103,6 +109,7 @@ public class TopicoController {
 
     @PutMapping("{id}")
     @Transactional
+    @CacheEvict(value = "topicoList", allEntries = true)
     public TopicoDto update(@PathVariable Long id, @RequestBody TopicoFormUpdate topicoUpdate) {
 
         return topicoUpdate.update(id, topicoRepository);
@@ -110,6 +117,7 @@ public class TopicoController {
     }
 
     @DeleteMapping("{id}")
+    @CacheEvict(value = "topicoList", allEntries = true)
     public ResponseEntity delete(@PathVariable Long id) {
 
         topicoRepository.deleteById(id);
