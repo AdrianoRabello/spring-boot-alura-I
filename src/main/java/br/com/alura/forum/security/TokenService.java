@@ -1,6 +1,7 @@
 package br.com.alura.forum.security;
 
 import br.com.alura.forum.models.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,42 @@ public class TokenService {
 
         Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
 
-        String token = Jwts.builder().setIssuer("Folum da alura") //
+        String token = Jwts.builder().setIssuer("Folum da alura") // who created token
                 .setSubject(principal.getId().toString()) // user identify
-                .setIssuedAt(hoje)// data de geacao
+                .setIssuedAt(hoje)// generated date
                 .setExpiration(dataExpiracao)//expiration date
-                .signWith(SignatureAlgorithm.HS256, secret) // soghnature
+                .signWith(SignatureAlgorithm.HS256, secret) // sighnature and sregret to sign
                 .compact(); // creating token
 
         System.out.println(token);
 
         return token;
+    }
+
+    public boolean tokenIsValid(String token) {
+
+        try {
+
+            /** validating token with secret */
+            Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+
+            return false;
+        }
+
+
+    }
+
+    /**
+     * Geeting Usuario id iside token
+     * **/
+    public Long getUserIdFromToken(String token) {
+
+        Claims clains = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+
+        /**
+         * Geeting id inside token and parsing to long */
+        return Long.parseLong(clains.getSubject());
     }
 }

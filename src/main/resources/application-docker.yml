@@ -1,8 +1,11 @@
+server:
+  port: 8081
+
 spring:
-  profile: dev
+  profile: docker
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/alura_spring_boot
+    url: jdbc:mysql://172.23.0.3:3306/alura_spring_boot
     username: root
     password: root
   jpa:
@@ -12,7 +15,9 @@ spring:
   boot:
     admin:
       client:
-        url: 'http://localhost:8081'
+        url: 'http://172.23.0.2:8080'
+        instance:
+          service-base-url: 'http://172.23.0.2:8080'
 
 token:
   secret: chavedotoken

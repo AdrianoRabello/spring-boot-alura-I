@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,6 +25,8 @@ import java.util.Collection;
 
 /** To enble chache */
 @EnableCaching
+
+@EnableSwagger2
 public class ForumApplication implements CommandLineRunner {
 
     @Autowired

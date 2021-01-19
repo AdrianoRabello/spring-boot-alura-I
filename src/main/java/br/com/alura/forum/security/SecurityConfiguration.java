@@ -1,5 +1,6 @@
 package br.com.alura.forum.security;
 
+import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @autor Adriano Rabello 15/01/2021  8:24 AM
@@ -23,22 +25,36 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     /**
-     * configuration for authentication
+     * this service implements spring security  UserDatilsService
      */
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
 
+    /**
+     * We need to configure this bean to get authentication. For default spring dosen't inejct 'it.
+     * */
     @Override
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    /**
+     * configuration for authentication
+     */
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
+        /**
+         * passwordeEncoder pass passwordEndorder Algorithm
+         * */
         auth.userDetailsService(authenticationService).passwordEncoder(bCryptPasswordEncoder());
     }
 
@@ -48,15 +64,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.cors();
 
         http.authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/auth").permitAll()
-                .antMatchers("/topicos").permitAll()
+                .antMatchers("/h2-console/*").permitAll()
+                .antMatchers("/cursos").permitAll()
+                .antMatchers(HttpMethod.GET,"/actuator").permitAll()
+                .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/auth").permitAll()
+                .antMatchers("/topicos").permitAll()// I need t oconfigure /* to permit findByID, cuz is blockled only with this configuration
+                .antMatchers("/topicos/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/topicos").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(new AuthenticationFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class); // this configuration set AuthenticationFilter before spring autenticationfilter default.
+
+
 
     }
 
@@ -66,8 +91,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
 
+        web.ignoring().antMatchers("/**.html", "/v2/api-docs", "/webjars/**","/swagger-resources/**");
     }
 
+    /**
+     * Bean configuration for encrypt password
+     */
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();

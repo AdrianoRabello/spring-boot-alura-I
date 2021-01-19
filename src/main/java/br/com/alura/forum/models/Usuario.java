@@ -92,17 +92,17 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return this.perfis;
 	}
 
 	@Override
 	public String getPassword() {
-		return null;
+		return this.senha;
 	}
 
 	@Override
 	public String getUsername() {
-		return null;
+		return this.email;
 	}
 
 	@Override

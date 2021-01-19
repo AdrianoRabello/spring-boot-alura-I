@@ -22,6 +22,9 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    /**
+     * we dont ned to create a controller. Spring for dafault create it. We jsut need to implements the securities interfaces.
+     * */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

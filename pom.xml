@@ -10,22 +10,42 @@
     </parent>
     <groupId>br.com.alura</groupId>
     <artifactId>forum</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>forum</name>
     <description>Alura Spring Course course</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
+
+        <!--        Spring documentation -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <!--        Spring ui for site -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <!--dependency for spring boot admin clit tobe monitored-->
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+            <version>2.1.4</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -33,6 +53,10 @@
             <version>0.9.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -45,13 +69,11 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.22</version>
         </dependency>
-
 
         <!--To use this in production we need to define one provider. Like Redis. For default spring use HashMap -->
         <dependency>
@@ -99,6 +121,7 @@
     </dependencies>
 
     <build>
+        <finalName>forum</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
