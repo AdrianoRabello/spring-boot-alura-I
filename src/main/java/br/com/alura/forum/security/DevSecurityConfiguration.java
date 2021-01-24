@@ -22,8 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
-@Profile( value = {"docker"}) /** this configratiuon is used for be load in determinates profiles */
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+/**
+ * this anotation will permite this class process only in dev profile
+ * */
+@Profile( value =  {"dev"}) /** this cofiguration is for load many profiles */
+public class DevSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     /**
@@ -67,15 +71,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors();
-
+        //http.headers().frameOptions().disable(); /** for h2 to work */
         http.authorizeRequests()
                 .antMatchers("/h2-console/*").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/cursos").permitAll()
                 .antMatchers(HttpMethod.GET,"/actuator").permitAll()
                 .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/auth").permitAll()
-                .antMatchers("/topicos").permitAll()// I need t oconfigure /* to permit findByID, cuz is blockled only with this configuration
+                .antMatchers("/topicos").permitAll()/** I need t oconfigure to permit findByID, cuz is blockled only with this configuration */
                 .antMatchers("/topicos/*").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/topicos/*").hasRole("ADMIN")  /** will permit only admins delete */
                 .antMatchers(HttpMethod.POST, "/topicos").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()

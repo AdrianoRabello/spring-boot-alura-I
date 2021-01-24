@@ -1,4 +1,12 @@
+
+# this condiguration is used for default with tests
+
+
+server:
+  port: 8080
+
 spring:
+  profile: h2
   h2:
     console:
       enabled: true
@@ -8,9 +16,10 @@ spring:
     username: sa
     password:
     driverClassName: org.h2.Driver
+    initialization-mode: never # with this anotation spring'll not load data.sql do insert into DB.
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.format_sql: true
 

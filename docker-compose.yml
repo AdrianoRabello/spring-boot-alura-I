@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+#  mysql_db:
+#    container_name: 'mysql_db'
+#    image: mysql:5.7
+#    restart: 'no'
+#    environment:
+#      MYSQL_DATABASE: 'alura_spring_boot'
+#      # So you don't have to use root, but you can if you like
+#      MYSQL_USER: 'root'
+#      # You can use whatever password you like
+#      MYSQL_PASSWORD: 'root'
+#      # Password for root access
+#      MYSQL_ROOT_PASSWORD: 'root'
+#    ports:
+#      # <Port exposed> : < MySQL Port running inside container>
+#      - '3306:3306'
+#    expose:
+#      # Opens port 3306 on the container
+#      - '3306'
+#      # Where our data will be persisted
+#    volumes:
+#      - my-db:/var/lib/mysql
+  alura_forum:
+    container_name: alura_forum
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      external: true
+      name: minha-rede
+
+
+
+
+
+
+
+
+# Names our volume
+volumes:
+  my-db:

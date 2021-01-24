@@ -4,6 +4,7 @@ import br.com.alura.forum.dtos.TokenDto;
 import br.com.alura.forum.dtos.form.LoginForm;
 import br.com.alura.forum.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+//@Profile(value = {"prod", "h2", "dev", "docker"}) /** this configuration is used for many profiles */
 public class AuthenticationController {
 
     @Autowired

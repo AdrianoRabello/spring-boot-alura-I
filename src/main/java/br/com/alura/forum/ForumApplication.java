@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -27,6 +28,7 @@ import java.util.Collection;
 @EnableCaching
 
 @EnableSwagger2
+
 public class ForumApplication implements CommandLineRunner {
 
     @Autowired
@@ -48,7 +50,8 @@ public class ForumApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Curso curso = cursoRepository.save(new Curso("Curso de springboot ", "Categoria teste"));
+        cursoRepository.save(new Curso("HTML 5", "Backand"));
+        Curso curso = cursoRepository.save(new Curso("JAVA ", "Backand"));
         topicoRepository.saveAll(Arrays.asList(new Topico("Duvida sore spring boot ","Como cria o projeto?",curso)));
 
         usuarioRepository.save(new Usuario("Adriano Rabello", "adrianor.rabello@hotmail.com",  new BCryptPasswordEncoder().encode("123456")));
