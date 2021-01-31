@@ -75,6 +75,7 @@ public class DevSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/h2-console/*").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/upload").permitAll()
                 .antMatchers("/cursos").permitAll()
                 .antMatchers(HttpMethod.GET,"/actuator").permitAll()
                 .antMatchers(HttpMethod.GET,"/actuator/**").permitAll()

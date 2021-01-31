@@ -1,5 +1,8 @@
 spring:
   profile: dev
+  servlet:
+    multipart:
+      max-file-size: 10MB
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/alura_spring_boot
